@@ -1,0 +1,3 @@
+rootProject.name = 'petri1'
+
+include("lib", "demo")
