@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// вспомогательгный класс-"помойка", для хранения разных доп свойств состояний, арок и пр
 public class DataHolder<E extends DataHolder<E>> {
 
     final protected List<Object> data;
@@ -18,7 +19,19 @@ public class DataHolder<E extends DataHolder<E>> {
 
     public E add(Object item) {
         data.add(item);
-        return (E)this;
+        return (E) this;
+    }
+
+    public <T> T get(Class<T> klass, T newValue) {
+        return data.stream()
+                .filter(klass::isInstance)
+                .findFirst()
+                .map(klass::cast)
+                .orElseGet(() -> {
+                    data.add(newValue);
+                    return newValue;
+                });
+
     }
 
     public <T> T get(Class<T> klass) {

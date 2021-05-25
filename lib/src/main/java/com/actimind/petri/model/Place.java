@@ -1,25 +1,47 @@
 package com.actimind.petri.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-@ToString
-@AllArgsConstructor()
+/**
+ * Узел состояния сети Петри ("место"). Тут могут быть токены.
+ */
 public class Place extends DataHolder<Place> {
-    @Getter @NonNull private final String id;
-    @Getter @NonNull private final String title;
+    @Getter
+    @NonNull
+    private final String id;
+    @Getter
+    @NonNull
+    private final String title;
 
     private final List<Token> tokens = new ArrayList<>();
+    private int maxTokensLimit = Integer.MAX_VALUE;
+
+    public Place(@NonNull String id, @NonNull String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public boolean canAcceptToken() {
+        return tokens.size() < maxTokensLimit;
+    }
+
+    public Place oneTokenAllowed() {
+        maxTokensLimit = 1;
+        return this;
+    }
 
     public Place add(Token token) {
         this.tokens.add(token);
         return this;
+    }
+
+    public Place addToken() {
+        return this.add(new Token());
     }
 
     public Place remove(Token token) {
@@ -44,5 +66,10 @@ public class Place extends DataHolder<Place> {
 
     public List<Token> getTokens() {
         return tokens;
+    }
+
+    public String toString() {
+        var tokensAsStr = tokens.stream().map(Token::toString).collect(Collectors.joining(""));
+        return "(" + title + "  " + tokensAsStr + ")";
     }
 }
