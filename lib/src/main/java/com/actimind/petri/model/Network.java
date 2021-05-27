@@ -54,9 +54,13 @@ public class Network {
         var arc = new OutputArc(transition, place);
         outputArcs.computeIfAbsent(place.getId(), s -> new ArrayList<>()).add(arc);
         outputArcs.computeIfAbsent(transition.getId(), s -> new ArrayList<>()).add(arc);
-        if (getInputArcs(transition).stream().anyMatch(it -> it.getPlace() == place)) {
-            arc.add(new TwoDirectional());
-        }
+        getInputArcs(transition).stream()
+                .filter(it -> it.getPlace() == place)
+                .findAny()
+                .ifPresent(inputArc -> {
+                    inputArc.add(new TwoDirectional());
+                    arc.add(new TwoDirectional());
+                });
         return arc;
     }
 
@@ -66,7 +70,11 @@ public class Network {
         inputArcs.computeIfAbsent(transition.getId(), s -> new ArrayList<>()).add(arc);
         getOutputArcs(transition).stream()
                 .filter(it -> it.getPlace() == place)
-                .forEach(oarc -> oarc.add(new TwoDirectional()));
+                .findAny()
+                .ifPresent(outputArc -> {
+                    outputArc.add(new TwoDirectional());
+                    arc.add(new TwoDirectional());
+                });
         return arc;
     }
 

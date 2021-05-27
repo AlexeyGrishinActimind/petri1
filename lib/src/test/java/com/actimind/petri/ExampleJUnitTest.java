@@ -8,7 +8,6 @@ import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.List;
 
-import static com.actimind.petri.junit.DSL.addTokens;
 import static com.actimind.petri.junit.DSL.networkTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,9 +16,7 @@ public class ExampleJUnitTest {
     @RepeatedTest(value = 2, name = "{displayName}: Pass {currentRepetition}/{totalRepetitions}")
     @DisplayName("Test 1")
     public void test1() {
-        var network = new ExampleNetwork() {{
-            addTokens(userNotCreated);
-        }};
+        var network = new ExampleNetwork();
         networkTest(network, this);
     }
 

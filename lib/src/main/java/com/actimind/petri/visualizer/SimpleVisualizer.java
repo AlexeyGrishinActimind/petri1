@@ -102,19 +102,26 @@ public class SimpleVisualizer {
                                                                     ? List.of(Arrow.DOT.open())
                                                                     : Collections.emptyList()
                                                     )
-                                    )
-                    ));
-                    network.getOutputArcs(transition).forEach(arc -> g.add(
-                            transitionNode
-                                    .link(
-                                            to(nodes.get(arc.getPlace().getId()))
                                                     .with(
-                                                            (arc.getBehavior() instanceof ResetArcBehaviour)
-                                                                    ? List.of(Style.DOTTED)
+                                                            arc.get(TwoDirectional.class) != null
+                                                                    ? List.of(Arrow.NORMAL.dir(Arrow.DirType.BOTH))
                                                                     : Collections.emptyList()
                                                     )
                                     )
                     ));
+                    network.getOutputArcs(transition)
+                            .stream().filter(it -> it.get(TwoDirectional.class) == null)
+                            .forEach(arc -> g.add(
+                                    transitionNode
+                                            .link(
+                                                    to(nodes.get(arc.getPlace().getId()))
+                                                            .with(
+                                                                    (arc.getBehavior() instanceof ResetArcBehaviour)
+                                                                            ? List.of(Style.DOTTED)
+                                                                            : Collections.emptyList()
+                                                            )
+                                            )
+                            ));
 
                 });
 
@@ -126,7 +133,6 @@ public class SimpleVisualizer {
 
     public static void main(String[] args) {
         var network = new ExampleNetwork();
-        network.userNotCreated.addToken();
         new SimpleVisualizer().main(network);
     }
 

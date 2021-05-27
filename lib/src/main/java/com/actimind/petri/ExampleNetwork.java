@@ -6,7 +6,7 @@ import com.actimind.petri.model.Transition;
 
 public class ExampleNetwork extends Network {
 
-    public Place userNotCreated = place("user not created");
+    public Place userNotCreated = place("user not created").addToken();
     public Place userCreated = place("user created");
     public Place noteCreated = place("note created");//.oneTokenAllowed();
 
